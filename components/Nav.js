@@ -36,8 +36,22 @@ const Nav = () => {
           Войти
         </button>
       ) : (
-        <div className="relative">
-          <MdOutlineKeyboardBackspace size={30} className="text-zinc-700" />
+        <div className="relative flex justify-between">
+          {pathname === "/profile" ? (
+            <MdOutlineKeyboardBackspace
+              size={30}
+              className="text-zinc-700 transition-colors hover:text-zinc-400"
+              onClick={() => router.push("/")}
+            />
+          ) : pathname === "/profile/new" ? (
+            <MdOutlineKeyboardBackspace
+              size={30}
+              className="text-zinc-700 transition-colors hover:text-zinc-400"
+              onClick={() => router.push("/profile")}
+            />
+          ) : (
+            <div></div>
+          )}
 
           <div
             className={`flex gap-1 items-end cursor-pointer rounded-lg px-2 py-1 bg-zinc-300 transition-all hover:bg-zinc-400 ${
