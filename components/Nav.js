@@ -40,13 +40,13 @@ const Nav = () => {
           {pathname === "/profile" ? (
             <MdOutlineKeyboardBackspace
               size={30}
-              className="text-zinc-700 transition-colors hover:text-zinc-400"
+              className="text-zinc-700 transition-colors hover:text-zinc-400 cursor-pointer"
               onClick={() => router.push("/")}
             />
           ) : pathname === "/profile/new" ? (
             <MdOutlineKeyboardBackspace
               size={30}
-              className="text-zinc-700 transition-colors hover:text-zinc-400"
+              className="text-zinc-700 transition-colors hover:text-zinc-400 cursor-pointer"
               onClick={() => router.push("/profile")}
             />
           ) : (
