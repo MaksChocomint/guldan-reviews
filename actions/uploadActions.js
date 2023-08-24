@@ -13,6 +13,7 @@ cloudinary.config({
 });
 
 async function saveFilesToLocal(formData) {
+  console.log(formData);
   const files = formData.getAll("files");
   const multipleBuffersPromise = files.map((file, index) =>
     file.arrayBuffer().then((data) => {
@@ -51,6 +52,7 @@ async function uploadFilesToCloudinary(newFiles) {
 
 export async function uploadForm(formData) {
   try {
+    console.log(newFiles);
     const newFiles = await saveFilesToLocal(formData);
 
     const cloudFiles = await uploadFilesToCloudinary(newFiles);

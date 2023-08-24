@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
@@ -9,12 +10,12 @@ const ReviewCard = ({ review }) => {
         <Image
           src={review.image}
           fill={true}
-          objectFit="cover"
-          objectPosition="50% 30%"
           quality={50}
           alt="review"
+          className="object-cover object-top-center"
+          sizes="33vw"
         />
-        <AudioPlayer audioUrl={review.audio} />
+        {review.audio && <AudioPlayer audioUrl={review.audio} />}
       </div>
       <div className="text-white w-full h-1/6 px-2 flex justify-between items-center">
         <div className="flex flex-col justify-center text-base font-medium tracking-wider text-white">
