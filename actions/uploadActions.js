@@ -91,7 +91,24 @@ export async function uploadForm(formData) {
 
 export async function getAllReviews() {
   try {
-    const reviews = await Review.find().sort("-createdAt");
+    const selectAllReviews = await Review.find().sort("-createdAt");
+    const reviews = [];
+    selectAllReviews.forEach((review) => {
+      reviews.append({
+        userName: review.userName,
+        userEmail: review.userEmail,
+        userAvatar: review.userAvatar,
+        name: review.name,
+        contentType: review.contentType,
+        storyRating: review.storyRating,
+        charactersRating: review.charactersRating,
+        graphicsRating: review.graphicsRating,
+        musicRating: review.musicRating,
+        overallRationg: review.overallRating,
+        image: review.image,
+        audio: review.audio,
+      });
+    });
     return reviews;
   } catch (error) {
     console.log(error);
