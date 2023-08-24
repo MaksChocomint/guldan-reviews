@@ -119,9 +119,9 @@ const UploadForm = () => {
     const newFormData = new FormData();
     for (const key in formData) {
       if (typeof formData[key] === "object") {
-        newFormData.append("files", formData[key]);
+        if (formData[key] !== null) newFormData.append("files", formData[key]);
       } else {
-        if (key !== "audio") newFormData.append("data", formData[key]);
+        newFormData.append("data", formData[key]);
       }
     }
 

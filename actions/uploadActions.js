@@ -13,7 +13,10 @@ cloudinary.config({
 });
 
 async function saveFilesToLocal(formData) {
+  console.log(formData.getAll("files"));
   const files = formData.getAll("files");
+
+  console.log(files);
   const multipleBuffersPromise = files.map((file, index) =>
     file.arrayBuffer().then((data) => {
       const buffer = Buffer.from(data);
@@ -92,8 +95,8 @@ export async function getAllReviews() {
     const selectAllReviews = await Review.find().sort("-createdAt");
     const reviews = [];
     selectAllReviews.forEach((review) => {
-      reviews.append({
-        _id: review._id,
+      const reviewObj = {
+        _id: review._id.toString(),
         userName: review.userName,
         userEmail: review.userEmail,
         userAvatar: review.userAvatar,
@@ -103,10 +106,12 @@ export async function getAllReviews() {
         charactersRating: review.charactersRating,
         graphicsRating: review.graphicsRating,
         musicRating: review.musicRating,
-        overallRationg: review.overallRating,
+        overallRating: review.overallRating,
         image: review.image,
         audio: review.audio,
-      });
+      };
+
+      reviews.push(reviewObj);
     });
     return reviews;
   } catch (error) {
