@@ -13,7 +13,6 @@ cloudinary.config({
 });
 
 async function saveFilesToLocal(formData) {
-  console.log(formData);
   const files = formData.getAll("files");
   const multipleBuffersPromise = files.map((file, index) =>
     file.arrayBuffer().then((data) => {
@@ -52,7 +51,6 @@ async function uploadFilesToCloudinary(newFiles) {
 
 export async function uploadForm(formData) {
   try {
-    console.log(newFiles);
     const newFiles = await saveFilesToLocal(formData);
 
     const cloudFiles = await uploadFilesToCloudinary(newFiles);
@@ -95,6 +93,7 @@ export async function getAllReviews() {
     const reviews = [];
     selectAllReviews.forEach((review) => {
       reviews.append({
+        _id: review._id,
         userName: review.userName,
         userEmail: review.userEmail,
         userAvatar: review.userAvatar,
