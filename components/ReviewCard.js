@@ -8,7 +8,7 @@ const ReviewCard = ({ review }) => {
   const router = useRouter();
   return (
     <div
-      className="flex flex-col items-center w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
+      className="flex flex-col items-center leading-tight w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
       onClick={() => router.push(`/reviews/${review._id}`)}
     >
       <div className="relative h-5/6 w-[600px] overflow-hidden">
@@ -24,9 +24,19 @@ const ReviewCard = ({ review }) => {
       </div>
       <div className="text-white w-full h-1/6 px-2 flex justify-between items-center">
         <div className="flex flex-col justify-center text-base font-medium tracking-wider text-white">
-          {review.name}
+          <span
+            style={{
+              lineHeight: "1.2",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              maxWidth: "170px",
+            }}
+          >
+            {review.name}
+          </span>
         </div>
-        <div className="flex gap-1 items-end">
+        <div className="flex gap-1 items-center">
           <Image
             src={review.userAvatar}
             width={35}
