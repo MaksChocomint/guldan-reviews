@@ -30,7 +30,7 @@ const Profile = () => {
       <div className="mt-10 grid grid-cols-3 gap-5">
         <Link
           href="/profile/new"
-          className="bg-green-400 w-full h-64 flex items-center justify-center text-3xl transition-colors cursor-pointer hover:bg-green-300"
+          className="bg-green-400 w-full h-64 flex items-center justify-center text-3xl cursor-pointer border-4 border-zinc-700 rounded-b-xl transition-all hover:bg-green-300 hover:border-zinc-400"
         >
           <AiOutlineAppstoreAdd size={70} />
         </Link>

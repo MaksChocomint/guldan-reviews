@@ -123,8 +123,6 @@ export async function getAllReviews() {
 
 export async function getUserReviews(session) {
   try {
-    console.log(session);
-
     if (!session) {
       return [];
     }

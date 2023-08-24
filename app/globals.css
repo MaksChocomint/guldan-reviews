@@ -16,3 +16,11 @@ input,
 textarea {
   outline: none;
 }
+
+input[type="range"] {
+  background-color: lightblue;
+  accent-color: #5daeff;
+  height: 4px;
+  border-radius: none;
+  width: 100%;
+}

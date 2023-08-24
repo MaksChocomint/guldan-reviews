@@ -11,7 +11,7 @@ const ReviewCard = ({ review }) => {
       className="flex flex-col items-center leading-tight w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
       onClick={() => router.push(`/reviews/${review._id}`)}
     >
-      <div className="relative h-5/6 w-[600px] overflow-hidden">
+      <div className="relative h-5/6 w-full">
         <Image
           src={review.image}
           fill={true}

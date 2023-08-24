@@ -1,12 +1,12 @@
 "use client";
 import { getReviewById } from "@/actions/uploadActions";
+import AudioPlayer from "@/components/AudioPlayer";
 import Layout from "@/components/Layout";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const ReviewPage = () => {
-  const router = useRouter();
   const pathname = usePathname();
   const id = pathname.split("/").slice(-1)[0];
 
@@ -30,7 +30,7 @@ const ReviewPage = () => {
       {review && (
         <div className="pb-10">
           <h1 className="text-center text-3xl font-bold">{review.name}</h1>
-          <div className="relative mt-5 h-[450px] w-full overflow-hidden">
+          <div className="relative mt-5 h-[550px] w-full">
             <Image
               src={review.image}
               fill={true}
@@ -39,6 +39,7 @@ const ReviewPage = () => {
               className="object-cover object-top-center"
               sizes="100vw"
             />
+            {review.audio && <AudioPlayer audioUrl={review.audio} />}
           </div>
           <div className="mt-5 text-lg text-justify leading-snug">
             {review.review.split("\n").map((paragraph, index) => (
