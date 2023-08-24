@@ -160,3 +160,33 @@ export async function getUserReviews(session) {
     return [];
   }
 }
+
+export async function getReviewById(reviewId) {
+  try {
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+      return null;
+    }
+
+    const reviewObj = {
+      _id: review._id.toString(),
+      userName: review.userName,
+      userEmail: review.userEmail,
+      userAvatar: review.userAvatar,
+      name: review.name,
+      contentType: review.contentType,
+      storyRating: review.storyRating,
+      charactersRating: review.charactersRating,
+      graphicsRating: review.graphicsRating,
+      musicRating: review.musicRating,
+      overallRating: review.overallRating,
+      image: review.image,
+      audio: review.audio,
+    };
+
+    return reviewObj;
+  } catch (error) {
+    console.error(error);
+  }
+}

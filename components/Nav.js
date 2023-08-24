@@ -19,6 +19,16 @@ const Nav = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
+  const handleRoute = () => {
+    if (pathname === "/profile") {
+      router.push("/");
+    } else if (pathname === "/profile/new") {
+      router.push("/profile");
+    } else {
+      router.push("/");
+    }
+  };
+
   useEffect(() => {
     if (!session && pathname !== "/") {
       router.push("/");
@@ -37,17 +47,11 @@ const Nav = () => {
         </button>
       ) : (
         <div className="relative flex justify-between w-full">
-          {pathname === "/profile" ? (
+          {pathname !== "/" ? (
             <MdOutlineKeyboardBackspace
               size={30}
               className="text-zinc-700 transition-colors hover:text-zinc-400 cursor-pointer"
-              onClick={() => router.push("/")}
-            />
-          ) : pathname === "/profile/new" ? (
-            <MdOutlineKeyboardBackspace
-              size={30}
-              className="text-zinc-700 transition-colors hover:text-zinc-400 cursor-pointer"
-              onClick={() => router.push("/profile")}
+              onClick={handleRoute}
             />
           ) : (
             <div></div>
