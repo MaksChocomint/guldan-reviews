@@ -26,7 +26,7 @@ const Nav = () => {
   }, [session]);
 
   return (
-    <div className="flex items-start justify-end w-full">
+    <div className="relative z-[100] flex items-start justify-end w-full">
       {!session ? (
         <button
           onClick={() => signIn("google")}
