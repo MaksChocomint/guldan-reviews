@@ -76,7 +76,7 @@ export async function uploadForm(formData) {
       musicRating: data[9],
       overallRating: data[10],
       image: cloudFiles[0].secure_url,
-      audio: cloudFiles[1]?.secure_url || null,
+      audio: cloudFiles[1] ? cloudFiles[1].secure_url : null,
     });
 
     await Review.create(newReview);
