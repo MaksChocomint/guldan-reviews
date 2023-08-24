@@ -116,6 +116,7 @@ const UploadForm = () => {
   ]);
 
   const handleSubmit = async () => {
+    console.log(formData.audio);
     const newFormData = new FormData();
     for (const key in formData) {
       if (typeof formData[key] === "object") {
@@ -123,7 +124,6 @@ const UploadForm = () => {
       } else {
         newFormData.append("data", formData[key]);
       }
-      console.log(newFormData);
     }
 
     const res = await uploadForm(newFormData);
