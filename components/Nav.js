@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { AiFillGoogleCircle } from "react-icons/ai";
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -36,6 +37,8 @@ const Nav = () => {
         </button>
       ) : (
         <div className="relative">
+          <MdOutlineKeyboardBackspace size={30} className="text-zinc-700" />
+
           <div
             className={`flex gap-1 items-end cursor-pointer rounded-lg px-2 py-1 bg-zinc-300 transition-all hover:bg-zinc-400 ${
               isDropdownOpen && "rounded-br-none"
