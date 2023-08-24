@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Review } from "@/models/Review";
+import { getSession } from "next-auth/react";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -13,7 +14,6 @@ cloudinary.config({
 });
 
 async function saveFilesToLocal(formData) {
-  console.log(formData.getAll("files"));
   const files = formData.getAll("files");
 
   console.log(files);
@@ -117,5 +117,46 @@ export async function getAllReviews() {
   } catch (error) {
     console.log(error);
     return;
+  }
+}
+
+export async function getUserReviews(session) {
+  try {
+    console.log(session);
+
+    if (!session) {
+      return [];
+    }
+    const userEmail = session.user.email;
+    const selectUserReviews = await Review.find({ userEmail }).sort(
+      "-createdAt"
+    );
+
+    const reviews = [];
+
+    selectUserReviews.forEach((review) => {
+      const reviewObj = {
+        _id: review._id.toString(),
+        userName: review.userName,
+        userEmail: review.userEmail,
+        userAvatar: review.userAvatar,
+        name: review.name,
+        contentType: review.contentType,
+        storyRating: review.storyRating,
+        charactersRating: review.charactersRating,
+        graphicsRating: review.graphicsRating,
+        musicRating: review.musicRating,
+        overallRating: review.overallRating,
+        image: review.image,
+        audio: review.audio,
+      };
+
+      reviews.push(reviewObj);
+    });
+
+    return reviews;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
