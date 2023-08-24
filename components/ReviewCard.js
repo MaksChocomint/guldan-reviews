@@ -2,10 +2,15 @@
 import React from "react";
 import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
+import { useRouter } from "next/navigation";
 
 const ReviewCard = ({ review }) => {
+  const router = useRouter();
   return (
-    <div className="flex flex-col items-center w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl">
+    <div
+      className="flex flex-col items-center w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
+      onClick={() => router.push(`/reviews/${review._id}`)}
+    >
       <div className="relative h-5/6 w-[600px] overflow-hidden">
         <Image
           src={review.image}
