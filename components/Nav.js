@@ -26,7 +26,7 @@ const Nav = () => {
   }, [session]);
 
   return (
-    <div className="flex items-start justify-end">
+    <div className="flex items-start justify-end w-full">
       {!session ? (
         <button
           onClick={() => signIn("google")}
@@ -36,7 +36,7 @@ const Nav = () => {
           Войти
         </button>
       ) : (
-        <div className="relative flex justify-between">
+        <div className="relative flex justify-between w-full">
           {pathname === "/profile" ? (
             <MdOutlineKeyboardBackspace
               size={30}
