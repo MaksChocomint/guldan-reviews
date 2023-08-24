@@ -10,7 +10,7 @@ const ReviewCard = ({ review }) => {
         <Image
           src={review.image}
           fill={true}
-          quality={50}
+          quality={100}
           alt="review"
           className="object-cover object-top-center"
           sizes="33vw"
@@ -30,7 +30,7 @@ const ReviewCard = ({ review }) => {
             alt="avatar"
             className="border-2 rounded-sm border-zinc-500"
           />
-          <div className="">
+          <div>
             {review.userName}{" "}
             <span className="font-semibold">
               -{" "}
