@@ -123,6 +123,7 @@ const UploadForm = () => {
       } else {
         newFormData.append("data", formData[key]);
       }
+      console.log(newFormData);
     }
 
     const res = await uploadForm(newFormData);
