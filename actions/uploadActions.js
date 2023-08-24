@@ -32,20 +32,23 @@ async function saveFilesToLocal(formData) {
 
 async function uploadFilesToCloudinary(newFiles) {
   const multipleFilesPromise = newFiles.map((file) => {
-    if (file.id === 0) {
-      return cloudinary.v2.uploader.upload(file.filepath, {
-        folder: "gul'dan-reviews/image",
-        resource_type: "image",
-      });
-    } else if (file.id === 1) {
-      return cloudinary.v2.uploader.upload(file.filepath, {
-        folder: "gul'dan-reviews/audio",
-        resource_type: "video",
-      });
+    if (file) {
+      if (file.id === 0) {
+        return cloudinary.v2.uploader.upload(file.filepath, {
+          folder: "gul'dan-reviews/image",
+          resource_type: "image",
+        });
+      } else if (file.id === 1) {
+        return cloudinary.v2.uploader.upload(file.filepath, {
+          folder: "gul'dan-reviews/audio",
+          resource_type: "video",
+        });
+      }
     }
   });
   return await Promise.all(multipleFilesPromise);
 }
+
 export async function uploadForm(formData) {
   try {
     const newFiles = await saveFilesToLocal(formData);
