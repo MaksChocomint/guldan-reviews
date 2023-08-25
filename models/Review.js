@@ -15,6 +15,16 @@ const ReviewSchema = new mongoose.Schema(
     overallRating: { type: Number, required: true },
     image: { type: String, required: true },
     audio: String,
+    rate: {
+      likes: {
+        type: Number,
+        default: 0,
+      },
+      dislikes: {
+        type: Number,
+        default: 0,
+      },
+    },
   },
   { timestamps: true }
 );

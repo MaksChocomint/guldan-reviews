@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
 import { useRouter } from "next/navigation";
+import Rate from "./Rate";
 
 const ReviewCard = ({ review }) => {
   const router = useRouter();
@@ -12,6 +13,7 @@ const ReviewCard = ({ review }) => {
       onClick={() => router.push(`/reviews/${review._id}`)}
     >
       <div className="relative h-5/6 w-full">
+        <Rate />
         <Image
           src={review.image}
           fill={true}

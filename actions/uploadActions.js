@@ -15,8 +15,6 @@ cloudinary.config({
 
 async function saveFilesToLocal(formData) {
   const files = formData.getAll("files");
-
-  console.log(files);
   const multipleBuffersPromise = files.map((file, index) =>
     file.arrayBuffer().then((data) => {
       const buffer = Buffer.from(data);
