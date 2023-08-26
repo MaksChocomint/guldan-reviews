@@ -13,7 +13,7 @@ const ReviewCard = ({ review }) => {
       onClick={() => router.push(`/reviews/${review._id}`)}
     >
       <div className="relative h-5/6 w-full">
-        <Rate />
+        <Rate review={review} />
         <Image
           src={review.image}
           fill={true}
