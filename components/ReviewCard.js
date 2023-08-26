@@ -5,7 +5,7 @@ import AudioPlayer from "./AudioPlayer";
 import { useRouter } from "next/navigation";
 import Rate from "./Rate";
 
-const ReviewCard = ({ review }) => {
+const ReviewCard = ({ review, id, setReviewList }) => {
   const router = useRouter();
   return (
     <div
@@ -13,7 +13,7 @@ const ReviewCard = ({ review }) => {
       onClick={() => router.push(`/reviews/${review._id}`)}
     >
       <div className="relative h-5/6 w-full">
-        <Rate review={review} />
+        <Rate review={review} id={id} setReviewList={setReviewList} />
         <Image
           src={review.image}
           fill={true}

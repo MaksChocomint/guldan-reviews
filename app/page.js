@@ -25,8 +25,15 @@ export default function Home() {
       <h1 className="text-center text-3xl font-bold">Топ рецензий</h1>
       <div className="mt-10 grid grid-cols-3 gap-5">
         {reviewList &&
-          reviewList.map((review) => {
-            return <ReviewCard key={review._id} review={review} />;
+          reviewList.map((review, id) => {
+            return (
+              <ReviewCard
+                key={review._id}
+                review={review}
+                id={id}
+                setReviewList={setReviewList}
+              />
+            );
           })}
       </div>
     </Layout>

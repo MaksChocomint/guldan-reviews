@@ -21,7 +21,8 @@ export async function getAllReviews() {
         overallRating: review.overallRating,
         image: review.image,
         audio: review.audio,
-        rate: review.rate,
+        likes: review.rate.likes,
+        dislikes: review.rate.dislikes,
       };
 
       reviews.push(reviewObj);
@@ -61,7 +62,8 @@ export async function getUserReviews(session) {
         overallRating: review.overallRating,
         image: review.image,
         audio: review.audio,
-        rate: review.rate,
+        likes: review.rate.likes,
+        dislikes: review.rate.dislikes,
       };
 
       reviews.push(reviewObj);
@@ -97,11 +99,53 @@ export async function getReviewById(reviewId) {
       overallRating: review.overallRating,
       image: review.image,
       audio: review.audio,
-      rate: review.rate,
+      likes: review.rate.likes,
+      dislikes: review.rate.dislikes,
     };
 
     return reviewObj;
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function getLikedReviews(session) {
+  try {
+    if (!session) {
+      return [];
+    }
+    const userEmail = session.user.email;
+    const selectLikedReviews = await Review.find({
+      "rate.likes": userEmail,
+    }).sort("-createdAt");
+
+    const reviews = [];
+
+    selectLikedReviews.forEach((review) => {
+      const reviewObj = {
+        _id: review._id.toString(),
+        userName: review.userName,
+        userEmail: review.userEmail,
+        userAvatar: review.userAvatar,
+        name: review.name,
+        contentType: review.contentType,
+        review: review.review,
+        storyRating: review.storyRating,
+        charactersRating: review.charactersRating,
+        graphicsRating: review.graphicsRating,
+        musicRating: review.musicRating,
+        overallRating: review.overallRating,
+        image: review.image,
+        audio: review.audio,
+        likes: review.rate.likes,
+        dislikes: review.rate.dislikes,
+      };
+      reviews.push(reviewObj);
+    });
+
+    return reviews;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }

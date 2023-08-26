@@ -80,12 +80,12 @@ const Nav = () => {
               >
                 Профиль
               </Link>
-              <button
-                onClick={toggleDropdown}
+              <Link
+                href="/profile/liked"
                 className="block w-full px-4 py-1 text-center hover:bg-zinc-400"
               >
-                Лайки
-              </button>
+                Любимые
+              </Link>
               <button
                 onClick={() => {
                   signOut();

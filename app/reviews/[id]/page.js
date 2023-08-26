@@ -3,6 +3,7 @@ import { getReviewById } from "@/actions/getActions";
 import AudioPlayer from "@/components/AudioPlayer";
 import Layout from "@/components/Layout";
 import Rate from "@/components/Rate";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
