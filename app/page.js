@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <h1 className="text-center text-3xl font-bold">Топ рецензий</h1>
+      <h1 className="text-center text-3xl font-bold">Новые рецензии</h1>
       <div className="mt-10 grid grid-cols-3 gap-5">
         {reviewList &&
           reviewList.map((review, id) => {
