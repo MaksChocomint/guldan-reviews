@@ -5,7 +5,6 @@ import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Review } from "@/models/Review";
-import { getSession } from "next-auth/react";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
