@@ -1,3 +1,4 @@
+"use server";
 import { Review } from "@/models/Review";
 
 export async function getAllReviews() {
