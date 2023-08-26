@@ -2,6 +2,7 @@ import Provider from "@/context/provider";
 import "./globals.css";
 import { Jost } from "next/font/google";
 import mongooseConnect from "@/lib/mongoose";
+import { Review } from "@/models/Review";
 
 mongooseConnect();
 

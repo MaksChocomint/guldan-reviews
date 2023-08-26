@@ -17,12 +17,12 @@ const ReviewSchema = new mongoose.Schema(
     audio: String,
     rate: {
       likes: {
-        type: Number,
-        default: 0,
+        type: [String],
+        default: [],
       },
       dislikes: {
-        type: Number,
-        default: 0,
+        type: [String],
+        default: [],
       },
     },
   },

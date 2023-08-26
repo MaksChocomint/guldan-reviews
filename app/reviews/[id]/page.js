@@ -1,9 +1,10 @@
 "use client";
-import { getReviewById } from "@/actions/uploadActions";
+import { getReviewById } from "@/actions/getActions";
 import AudioPlayer from "@/components/AudioPlayer";
 import Layout from "@/components/Layout";
+import Rate from "@/components/Rate";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const ReviewPage = () => {
@@ -40,6 +41,7 @@ const ReviewPage = () => {
               sizes="100vw"
             />
             {review.audio && <AudioPlayer audioUrl={review.audio} />}
+            <Rate />
           </div>
           <div className="mt-5 text-lg text-justify leading-snug">
             {review.review.split("\n").map((paragraph, index) => (

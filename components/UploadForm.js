@@ -4,10 +4,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import os from "os";
-import fs from "fs/promises";
 import { uploadForm } from "@/actions/uploadActions";
 import ButtonSubmit from "./ButtonSubmit";
 

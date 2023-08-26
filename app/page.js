@@ -2,7 +2,7 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import ReviewCard from "@/components/ReviewCard";
-import { getAllReviews } from "@/actions/uploadActions";
+import { getAllReviews } from "@/actions/getActions";
 
 export default function Home() {
   const [reviewList, setReviewList] = useState([]);
