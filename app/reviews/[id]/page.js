@@ -42,7 +42,7 @@ const ReviewPage = () => {
               sizes="100vw"
             />
             {review.audio && <AudioPlayer audioUrl={review.audio} />}
-            <Rate review={review} />
+            <Rate review={review} setReview={setReview} />
           </div>
           <div className="mt-5 text-lg text-justify leading-snug">
             {review.review.split("\n").map((paragraph, index) => (

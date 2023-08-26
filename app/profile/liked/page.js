@@ -13,7 +13,6 @@ const Liked = () => {
     try {
       const reviews = await getLikedReviews(session);
       setReviewList(reviews);
-      console.log(reviewList);
     } catch (error) {
       console.error("Ошибка при получении рецензий:", error);
     }

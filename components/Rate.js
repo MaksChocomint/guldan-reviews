@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { useState, useEffect } from "react";
 
-const Rate = ({ review, id, setReviewList }) => {
+const Rate = ({ review, id, setReviewList, setReview }) => {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const { data: session } = useSession();
@@ -13,6 +13,7 @@ const Rate = ({ review, id, setReviewList }) => {
     e.stopPropagation();
     try {
       await setLikesCount(review._id, session);
+
       if (id !== undefined) {
         if (liked) {
           setReviewList((prevReviewList) => {
@@ -47,6 +48,26 @@ const Rate = ({ review, id, setReviewList }) => {
           setLiked((prevLiked) => !prevLiked);
           setDisliked((prevDisliked) => !prevDisliked);
         }
+      } else {
+        if (liked) {
+          setReview({
+            ...review,
+            likes: review.likes.filter(
+              (email) => email !== session.user?.email
+            ),
+          });
+          setLiked((prevLiked) => !prevLiked);
+        } else {
+          setReview({
+            ...review,
+            likes: [...review.likes, session.user?.email],
+            dislikes: review.dislikes.filter(
+              (email) => email !== session.user?.email
+            ),
+          });
+          setLiked((prevLiked) => !prevLiked);
+          setDisliked((prevDisliked) => !prevDisliked);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -62,12 +83,7 @@ const Rate = ({ review, id, setReviewList }) => {
           setReviewList((prevReviewList) => {
             return prevReviewList.map((review, idx) => {
               if (idx === id) {
-                return {
-                  ...review,
-                  dislikes: review.dislikes.filter(
-                    (email) => email !== session.user?.email
-                  ),
-                };
+                return;
               }
               return review;
             });
@@ -87,6 +103,26 @@ const Rate = ({ review, id, setReviewList }) => {
               }
               return review;
             });
+          });
+          setDisliked((prevDisliked) => !prevDisliked);
+          setLiked((prevLiked) => !prevLiked);
+        }
+      } else {
+        if (disliked) {
+          setReview({
+            ...review,
+            dislikes: review.dislikes.filter(
+              (email) => email !== session.user?.email
+            ),
+          });
+          setDisliked((prevDisliked) => !prevDisliked);
+        } else {
+          setReview({
+            ...review,
+            dislikes: [...review.dislikes, session.user?.email],
+            likes: review.likes.filter(
+              (email) => email !== session.user?.email
+            ),
           });
           setDisliked((prevDisliked) => !prevDisliked);
           setLiked((prevLiked) => !prevLiked);
