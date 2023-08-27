@@ -55,3 +55,11 @@ export async function setDislikesCount(reviewId, session) {
     console.error(err);
   }
 }
+
+export async function setViews(reviewId) {
+  try {
+    await Review.findByIdAndUpdate(reviewId, { $inc: { views: 1 } });
+  } catch (err) {
+    console.error(err);
+  }
+}

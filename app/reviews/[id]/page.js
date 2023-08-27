@@ -1,9 +1,9 @@
 "use client";
 import { getReviewById } from "@/actions/getActions";
+import { setViews } from "@/actions/setActions";
 import AudioPlayer from "@/components/AudioPlayer";
 import Layout from "@/components/Layout";
 import Rate from "@/components/Rate";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -23,8 +23,13 @@ const ReviewPage = () => {
     }
   };
 
+  const setIsViewed = async () => {
+    await setViews(id);
+  };
+
   useEffect(() => {
     fetchData();
+    setIsViewed();
   }, []);
 
   return (

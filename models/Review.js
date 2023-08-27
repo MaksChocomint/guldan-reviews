@@ -25,6 +25,7 @@ const ReviewSchema = new mongoose.Schema(
         default: [],
       },
     },
+    views: Number,
   },
   { timestamps: true }
 );

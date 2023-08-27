@@ -3,14 +3,22 @@ import React from "react";
 import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Rate from "./Rate";
 
 const ReviewCard = ({ review, id, setReviewList }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   return (
     <div
       className="flex flex-col items-center leading-tight w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
-      onClick={() => router.push(`/reviews/${review._id}`)}
+      onClick={() => {
+        session
+          ? router.push(`/reviews/${review._id}`)
+          : alert(
+              "Пожалуйста, войдите в свой аккаунт, чтобы просматривать рецензии других пользователей и добавлять свои!"
+            );
+      }}
     >
       <div className="relative h-5/6 w-full">
         <Rate review={review} id={id} setReviewList={setReviewList} />
@@ -22,7 +30,9 @@ const ReviewCard = ({ review, id, setReviewList }) => {
           className="object-cover object-top-center"
           sizes="33vw"
         />
-        {review.audio && <AudioPlayer audioUrl={review.audio} />}
+        {review.audio && (
+          <AudioPlayer audioUrl={review.audio} reviewId={review._id} />
+        )}
       </div>
       <div className="text-white w-full h-1/6 px-2 flex justify-between items-center">
         <div className="flex flex-col justify-center text-base font-medium tracking-wider text-white">

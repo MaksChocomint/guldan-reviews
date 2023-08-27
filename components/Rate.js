@@ -11,125 +11,137 @@ const Rate = ({ review, id, setReviewList, setReview }) => {
 
   const handleLikeClick = async (e) => {
     e.stopPropagation();
-    try {
-      await setLikesCount(review._id, session);
+    if (!session) {
+      alert(
+        "Пожалуйста, войдите в свой аккаунт, чтобы оценивать рецензии других пользователей!"
+      );
+    } else {
+      try {
+        await setLikesCount(review._id, session);
 
-      if (id !== undefined) {
-        if (liked) {
-          setReviewList((prevReviewList) => {
-            return prevReviewList.map((review, idx) => {
-              if (idx === id) {
-                return {
-                  ...review,
-                  likes: review.likes.filter(
-                    (email) => email !== session.user?.email
-                  ),
-                };
-              }
-              return review;
+        if (id !== undefined) {
+          if (liked) {
+            setReviewList((prevReviewList) => {
+              return prevReviewList.map((review, idx) => {
+                if (idx === id) {
+                  return {
+                    ...review,
+                    likes: review.likes.filter(
+                      (email) => email !== session.user?.email
+                    ),
+                  };
+                }
+                return review;
+              });
             });
-          });
-          setLiked((prevLiked) => !prevLiked);
-        } else {
-          setReviewList((prevReviewList) => {
-            return prevReviewList.map((review, idx) => {
-              if (idx === id) {
-                return {
-                  ...review,
-                  likes: [...review.likes, session.user?.email],
-                  dislikes: review.dislikes.filter(
-                    (email) => email !== session.user?.email
-                  ),
-                };
-              }
-              return review;
+            setLiked((prevLiked) => !prevLiked);
+          } else {
+            setReviewList((prevReviewList) => {
+              return prevReviewList.map((review, idx) => {
+                if (idx === id) {
+                  return {
+                    ...review,
+                    likes: [...review.likes, session.user?.email],
+                    dislikes: review.dislikes.filter(
+                      (email) => email !== session.user?.email
+                    ),
+                  };
+                }
+                return review;
+              });
             });
-          });
-          setLiked((prevLiked) => !prevLiked);
-          setDisliked((prevDisliked) => !prevDisliked);
-        }
-      } else {
-        if (liked) {
-          setReview({
-            ...review,
-            likes: review.likes.filter(
-              (email) => email !== session.user?.email
-            ),
-          });
-          setLiked((prevLiked) => !prevLiked);
+            setLiked((prevLiked) => !prevLiked);
+            setDisliked((prevDisliked) => !prevDisliked);
+          }
         } else {
-          setReview({
-            ...review,
-            likes: [...review.likes, session.user?.email],
-            dislikes: review.dislikes.filter(
-              (email) => email !== session.user?.email
-            ),
-          });
-          setLiked((prevLiked) => !prevLiked);
-          setDisliked((prevDisliked) => !prevDisliked);
+          if (liked) {
+            setReview({
+              ...review,
+              likes: review.likes.filter(
+                (email) => email !== session.user?.email
+              ),
+            });
+            setLiked((prevLiked) => !prevLiked);
+          } else {
+            setReview({
+              ...review,
+              likes: [...review.likes, session.user?.email],
+              dislikes: review.dislikes.filter(
+                (email) => email !== session.user?.email
+              ),
+            });
+            setLiked((prevLiked) => !prevLiked);
+            setDisliked((prevDisliked) => !prevDisliked);
+          }
         }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 
   const handleDislikeClick = async (e) => {
     e.stopPropagation();
-    try {
-      await setDislikesCount(review._id, session);
-      if (id !== undefined) {
-        if (disliked) {
-          setReviewList((prevReviewList) => {
-            return prevReviewList.map((review, idx) => {
-              if (idx === id) {
-                return;
-              }
-              return review;
+    if (!session) {
+      alert(
+        "Пожалуйста, войдите в свой аккаунт, чтобы оценивать рецензии других пользователей!"
+      );
+    } else {
+      try {
+        await setDislikesCount(review._id, session);
+        if (id !== undefined) {
+          if (disliked) {
+            setReviewList((prevReviewList) => {
+              return prevReviewList.map((review, idx) => {
+                if (idx === id) {
+                  return;
+                }
+                return review;
+              });
             });
-          });
-          setDisliked((prevDisliked) => !prevDisliked);
-        } else {
-          setReviewList((prevReviewList) => {
-            return prevReviewList.map((review, idx) => {
-              if (idx === id) {
-                return {
-                  ...review,
-                  dislikes: [...review.dislikes, session.user?.email],
-                  likes: review.likes.filter(
-                    (email) => email !== session.user?.email
-                  ),
-                };
-              }
-              return review;
+            setDisliked((prevDisliked) => !prevDisliked);
+          } else {
+            setReviewList((prevReviewList) => {
+              return prevReviewList.map((review, idx) => {
+                if (idx === id) {
+                  return {
+                    ...review,
+                    dislikes: [...review.dislikes, session.user?.email],
+                    likes: review.likes.filter(
+                      (email) => email !== session.user?.email
+                    ),
+                  };
+                }
+                return review;
+              });
             });
-          });
-          setDisliked((prevDisliked) => !prevDisliked);
-          setLiked((prevLiked) => !prevLiked);
-        }
-      } else {
-        if (disliked) {
-          setReview({
-            ...review,
-            dislikes: review.dislikes.filter(
-              (email) => email !== session.user?.email
-            ),
-          });
-          setDisliked((prevDisliked) => !prevDisliked);
+            setDisliked((prevDisliked) => !prevDisliked);
+            setLiked((prevLiked) => !prevLiked);
+          }
         } else {
-          setReview({
-            ...review,
-            dislikes: [...review.dislikes, session.user?.email],
-            likes: review.likes.filter(
-              (email) => email !== session.user?.email
-            ),
-          });
-          setDisliked((prevDisliked) => !prevDisliked);
-          setLiked((prevLiked) => !prevLiked);
+          if (disliked) {
+            setReview({
+              ...review,
+              dislikes: review.dislikes.filter(
+                (email) => email !== session.user?.email
+              ),
+            });
+            setDisliked((prevDisliked) => !prevDisliked);
+          } else {
+            setReview({
+              ...review,
+              dislikes: [...review.dislikes, session.user?.email],
+              likes: review.likes.filter(
+                (email) => email !== session.user?.email
+              ),
+            });
+            setDisliked((prevDisliked) => !prevDisliked);
+            setLiked((prevLiked) => !prevLiked);
+          }
         }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 

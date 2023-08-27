@@ -1,9 +1,9 @@
 "use server";
 import { Review } from "@/models/Review";
 
-export async function getAllReviews() {
+export async function getAllReviews(sort) {
   try {
-    const selectAllReviews = await Review.find().sort("-createdAt");
+    const selectAllReviews = await Review.find().sort(sort);
     const reviews = [];
     selectAllReviews.forEach((review) => {
       const reviewObj = {
@@ -23,6 +23,7 @@ export async function getAllReviews() {
         audio: review.audio,
         likes: review.rate.likes,
         dislikes: review.rate.dislikes,
+        views: review.rate.views,
       };
 
       reviews.push(reviewObj);
@@ -64,6 +65,7 @@ export async function getUserReviews(session) {
         audio: review.audio,
         likes: review.rate.likes,
         dislikes: review.rate.dislikes,
+        views: review.rate.views,
       };
 
       reviews.push(reviewObj);
@@ -101,6 +103,7 @@ export async function getReviewById(reviewId) {
       audio: review.audio,
       likes: review.rate.likes,
       dislikes: review.rate.dislikes,
+      views: review.rate.views,
     };
 
     return reviewObj;
@@ -139,6 +142,7 @@ export async function getLikedReviews(session) {
         audio: review.audio,
         likes: review.rate.likes,
         dislikes: review.rate.dislikes,
+        views: review.rate.views,
       };
       reviews.push(reviewObj);
     });

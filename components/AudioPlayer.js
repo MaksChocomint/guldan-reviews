@@ -1,22 +1,30 @@
+import { setViews } from "@/actions/setActions";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { MdPlayCircle, MdStopCircle } from "react-icons/md";
 
-const AudioPlayer = ({ audioUrl }) => {
+const AudioPlayer = ({ audioUrl, reviewId }) => {
   const [audio] = useState(new Audio(audioUrl));
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const pathname = usePathname();
 
-  const toggleAudio = (e) => {
+  const [isViewed, setIsViewed] = useState(false);
+
+  const toggleAudio = async (e) => {
     e.stopPropagation();
+
     if (isPlaying) {
       audio.pause();
     } else {
       audio.play();
     }
     setIsPlaying(!isPlaying);
+    if (!isViewed) {
+      await setViews(reviewId);
+      setIsViewed(true);
+    }
   };
 
   const handleTimeUpdate = () => {
