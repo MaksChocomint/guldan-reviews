@@ -5,7 +5,7 @@ const ButtonSubmit = ({ children, ...props }) => {
   const { pending } = useFormStatus();
   return (
     <button type="submit" disabled={pending} {...props}>
-      {pending ? "Loading..." : children}
+      {pending ? "Загрузка..." : children}
     </button>
   );
 };

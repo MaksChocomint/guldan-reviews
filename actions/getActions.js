@@ -1,5 +1,6 @@
 "use server";
 import { Review } from "@/models/Review";
+import { Comment } from "@/models/Comment";
 
 export async function getAllReviews(sort) {
   try {
@@ -151,5 +152,31 @@ export async function getLikedReviews(session) {
   } catch (error) {
     console.error(error);
     return [];
+  }
+}
+
+export async function getAllReviewComments(reviewId) {
+  try {
+    const selectAllReviewComments = await Comment.find({
+      reviewId: reviewId,
+    }).sort("-createdAt");
+    const comments = [];
+    selectAllReviewComments.forEach((comment) => {
+      const commentObj = {
+        _id: comment._id.toString(),
+        userName: comment.userName,
+        userEmail: comment.userEmail,
+        userAvatar: comment.userAvatar,
+        message: comment.message,
+        reviewId: comment.reviewId,
+        createdAt: comment.createdAt,
+      };
+
+      comments.push(commentObj);
+    });
+    return comments;
+  } catch (error) {
+    console.log(error);
+    return;
   }
 }

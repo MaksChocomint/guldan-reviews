@@ -2,6 +2,7 @@
 import { getReviewById } from "@/actions/getActions";
 import { setViews } from "@/actions/setActions";
 import AudioPlayer from "@/components/AudioPlayer";
+import CommentSection from "@/components/Comment/CommentSection";
 import Layout from "@/components/Layout";
 import Rate from "@/components/Rate";
 import Image from "next/image";
@@ -56,6 +57,7 @@ const ReviewPage = () => {
               </p>
             ))}
           </div>
+          <div className="h-1 w-full bg-zinc-300"></div>
           <div className="mt-5 text-2xl text-center font-medium">
             <h2 className="text-3xl ">Оценка от {review.userName + "'а"}</h2>
             <div className="mt-3 flex flex-col">
@@ -211,6 +213,8 @@ const ReviewPage = () => {
               </div>
             </div>
           </div>
+          <div className="h-1 mt-4 w-full bg-zinc-300"></div>
+          <CommentSection reviewId={id} />
         </div>
       )}
     </Layout>

@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Review } from "@/models/Review";
+import { Comment } from "@/models/Comment";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -82,7 +83,31 @@ export async function uploadForm(formData) {
 
     await Review.create(newReview);
 
-    return { msg: "Upload Success!" };
+    return { msg: "Review Upload Success!" };
+  } catch (error) {
+    return { errMsg: error.message };
+  }
+}
+
+export async function uploadComment(commentData) {
+  try {
+    const data = commentData;
+    if (data[1] === "makschocomint@gmail.com") {
+      data[0] = "Гул'дан";
+      data[2] = "https://i.imgur.com/DPjLpCG.jpg?1";
+    }
+
+    const newComment = new Comment({
+      userName: data[0],
+      userEmail: data[1],
+      userAvatar: data[2],
+      message: data[3],
+      reviewId: data[4],
+    });
+
+    await Comment.create(newComment);
+
+    return { msg: "Comment Upload Success!" };
   } catch (error) {
     return { errMsg: error.message };
   }

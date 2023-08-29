@@ -13,7 +13,9 @@ form > div {
 }
 
 input,
-textarea {
+textarea,
+option,
+select {
   outline: none;
 }
 
