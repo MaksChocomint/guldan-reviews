@@ -86,6 +86,12 @@ const Nav = () => {
               >
                 Любимые
               </Link>
+              <Link
+                href="/profile/settings"
+                className="block w-full px-4 py-1 text-center hover:bg-zinc-400"
+              >
+                Настройки
+              </Link>
               <button
                 onClick={() => {
                   signOut();

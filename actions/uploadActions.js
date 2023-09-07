@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Review } from "@/models/Review";
 import { Comment } from "@/models/Comment";
+import mongoose from "mongoose";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -15,6 +16,7 @@ cloudinary.config({
 
 async function saveFilesToLocal(formData) {
   const files = formData.getAll("files");
+
   const multipleBuffersPromise = files.map((file, index) =>
     file.arrayBuffer().then((data) => {
       const buffer = Buffer.from(data);
@@ -108,6 +110,42 @@ export async function uploadComment(commentData) {
     await Comment.create(newComment);
 
     return { msg: "Comment Upload Success!" };
+  } catch (error) {
+    return { errMsg: error.message };
+  }
+}
+
+export async function uploadProfileData(formData) {
+  try {
+    const data = formData.getAll("data");
+    let cloudFiles = null;
+    console.log("4");
+    if (!data[3]) {
+      const newFiles = await saveFilesToLocal(formData);
+      cloudFiles = await uploadFilesToCloudinary(newFiles);
+      newFiles.map((file) => fs.unlink(file.filepath));
+    }
+    console.log("3");
+
+    const newProfileData = {
+      email: data[0],
+      name: data[1],
+      image: cloudFiles ? cloudFiles[0].secure_url : data[3],
+    };
+
+    console.log("2");
+
+    await mongoose.models.Users.findOneAndUpdate(
+      { email: newProfileData.email },
+      {
+        $set: {
+          email: newProfileData.email,
+          name: newProfileData.name,
+          image: newProfileData.image,
+        },
+      }
+    );
+    console.log("1");
   } catch (error) {
     return { errMsg: error.message };
   }
