@@ -6,7 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Review } from "@/models/Review";
 import { Comment } from "@/models/Comment";
-import mongoose from "mongoose";
+import { User } from "@/models/User";
+import { profile } from "console";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -61,10 +62,6 @@ export async function uploadForm(formData) {
     newFiles.map((file) => fs.unlink(file.filepath));
 
     const data = formData.getAll("data");
-    if (data[1] === "makschocomint@gmail.com") {
-      data[0] = "Гул'дан";
-      data[2] = "https://i.imgur.com/DPjLpCG.jpg?1";
-    }
 
     const newReview = new Review({
       userName: data[0],
@@ -115,27 +112,41 @@ export async function uploadComment(commentData) {
   }
 }
 
+export async function updateAllReviews(profileData) {
+  try {
+    await Review.updateMany(
+      { userEmail: profileData.email },
+      {
+        $set: {
+          userName: profileData.name,
+          userAvatar: profileData.image,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
+
 export async function uploadProfileData(formData) {
   try {
     const data = formData.getAll("data");
     let cloudFiles = null;
-    console.log("4");
-    if (!data[3]) {
+
+    if (!data[2]) {
       const newFiles = await saveFilesToLocal(formData);
       cloudFiles = await uploadFilesToCloudinary(newFiles);
       newFiles.map((file) => fs.unlink(file.filepath));
     }
-    console.log("3");
 
     const newProfileData = {
       email: data[0],
       name: data[1],
-      image: cloudFiles ? cloudFiles[0].secure_url : data[3],
+      image: cloudFiles !== null ? cloudFiles[0].secure_url : data[2],
     };
 
-    console.log("2");
-
-    await mongoose.models.Users.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { email: newProfileData.email },
       {
         $set: {
@@ -145,8 +156,9 @@ export async function uploadProfileData(formData) {
         },
       }
     );
-    console.log("1");
+
+    await updateAllReviews(newProfileData);
   } catch (error) {
-    return { errMsg: error.message };
+    console.log(error);
   }
 }

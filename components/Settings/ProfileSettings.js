@@ -38,7 +38,8 @@ const ProfileSettings = () => {
     formData.append("data", session?.user?.email);
     formData.append("data", profileData.nickname);
     formData.append("data", session?.user?.image);
-    uploadProfileData(formData);
+    await uploadProfileData(formData);
+    setIsNicknameChanged(false);
   };
 
   const handleApplyAvatar = async (e) => {
@@ -47,7 +48,8 @@ const ProfileSettings = () => {
     formData.append("data", session?.user?.email);
     formData.append("data", session?.user?.name);
     formData.append("files", profileData.avatar);
-    uploadProfileData(formData);
+    await uploadProfileData(formData);
+    setIsAvatarChanged(false);
   };
 
   return (

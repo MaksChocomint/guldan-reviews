@@ -1,6 +1,7 @@
 "use server";
 import { Review } from "@/models/Review";
 import { Comment } from "@/models/Comment";
+import { User } from "@/models/User";
 
 export async function getAllReviews(sort) {
   try {
@@ -175,6 +176,16 @@ export async function getAllReviewComments(reviewId) {
       comments.push(commentObj);
     });
     return comments;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+}
+
+export async function getUserDataByEmail(email) {
+  try {
+    const userData = await User.findOne({ email: email });
+    return userData;
   } catch (error) {
     console.log(error);
     return;
