@@ -35,9 +35,7 @@ const CommentItem = ({ comment }) => {
           <div className="font-semibold cursor-pointer transition-colors hover:text-zinc-500">
             {comment.userName}
           </div>
-          <div className="text-sm font-light text-zinc-600">
-            {formattedDate}
-          </div>
+          <div className="text-sm font-light opacity-60">{formattedDate}</div>
         </div>
         <div>{comment.message}</div>
       </div>

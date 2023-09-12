@@ -8,8 +8,10 @@ import Rate from "@/components/Rate";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ReviewPage = () => {
+  const style = useSelector((state) => state.styles);
   const pathname = usePathname();
   const id = pathname.split("/").slice(-1)[0];
 
@@ -57,7 +59,7 @@ const ReviewPage = () => {
               </p>
             ))}
           </div>
-          <div className="h-1 w-full bg-zinc-300"></div>
+          <div className={`h-1 w-full ${style.background}`}></div>
           <div className="mt-5 text-2xl text-center font-medium">
             <h2 className="text-3xl ">Оценка от {review.userName + "'а"}</h2>
             <div className="mt-3 flex flex-col">
@@ -213,7 +215,7 @@ const ReviewPage = () => {
               </div>
             </div>
           </div>
-          <div className="h-1 mt-4 w-full bg-zinc-300"></div>
+          <div className={`h-1 mt-4 w-full ${style.background}`}></div>
           <CommentSection reviewId={id} />
         </div>
       )}

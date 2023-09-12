@@ -1,14 +1,16 @@
 "use client";
-
-import { Jost } from "next/font/google";
+import { useSelector } from "react-redux";
 import Nav from "./Nav";
-const jost = Jost({ subsets: ["latin", "cyrillic"] });
 
 const Layout = ({ children }) => {
+  const style = useSelector((state) => state.styles); // Используйте Redux для получения стилей
+
   return (
-    <main className={jost.className}>
-      <div className=" bg-zinc-300 h-full">
-        <div className="bg-zinc-200 h-full min-h-screen py-3 px-10 mx-32 ">
+    <main>
+      <div className={`h-full ${style.background} ${style.text}`}>
+        <div
+          className={`h-full min-h-screen py-3 px-10 mx-32 ${style.foreground}`}
+        >
           <Nav />
           {children}
         </div>

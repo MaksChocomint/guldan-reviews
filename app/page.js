@@ -3,11 +3,14 @@ import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import ReviewCard from "@/components/ReviewCard";
 import { getAllReviews } from "@/actions/getActions";
+import SortSelect from "@/components/SortSelect";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const [reviewList, setReviewList] = useState([]);
   const [sort, setSort] = useState("-createdAt");
   const [title, setTitle] = useState("Новые рецензии");
+  const style = useSelector((state) => state.styles);
 
   const fetchData = async () => {
     try {
@@ -27,25 +30,12 @@ export default function Home() {
     }
   }, [sort]);
 
-  const handleSortChange = (e) => {
-    const selectedSort = e.target.value;
-    setSort(selectedSort);
-  };
-
   return (
     <Layout>
       <h1 className="text-center text-3xl font-bold">{title}</h1>
       <div className="mt-4 flex w-full justify-end items-center gap-6">
-        <div className="h-1 w-full bg-zinc-300"></div>
-        <select
-          id="sortSelect"
-          value={sort}
-          onChange={handleSortChange}
-          className="mt-1 py-2 px-1 text-lg border rounded-md w-auto text-center"
-        >
-          <option value="-createdAt">Новые</option>
-          <option value="-views">Популярные</option>
-        </select>
+        <div className={`h-1 w-full ${style.background}`}></div>
+        <SortSelect options={["Новые", "Популярные"]} setSort={setSort} />
       </div>
       <div className="mt-5 grid grid-cols-3 gap-5">
         {reviewList &&
@@ -60,7 +50,7 @@ export default function Home() {
             );
           })}
       </div>
-      <div className="h-1 w-full bg-zinc-300 mt-10"></div>
+      <div className={`h-1 w-full mt-10 ${style.background}`}></div>
     </Layout>
   );
 }

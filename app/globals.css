@@ -9,7 +9,7 @@
 }
 
 form > div {
-  @apply bg-zinc-300 rounded-xl p-8;
+  @apply rounded-xl p-8;
 }
 
 input,

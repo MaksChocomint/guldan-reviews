@@ -3,6 +3,7 @@ import "./globals.css";
 import { Jost } from "next/font/google";
 import mongooseConnect from "@/lib/mongoose";
 import { Review } from "@/models/Review";
+import ReduxProvider from "@/context/reduxProvider";
 
 mongooseConnect();
 
@@ -20,7 +21,9 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={jost.className}>
-        <Provider>{children}</Provider>
+        <ReduxProvider>
+          <Provider>{children}</Provider>
+        </ReduxProvider>
       </body>
     </html>
   );

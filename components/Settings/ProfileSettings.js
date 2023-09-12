@@ -4,6 +4,7 @@ import Image from "next/image";
 import ApplyButton from "../ApplyButton";
 import React, { useState } from "react";
 import { uploadProfileData } from "@/actions/uploadActions";
+import { useSelector } from "react-redux";
 
 const ProfileSettings = () => {
   const { data: session } = useSession();
@@ -12,6 +13,8 @@ const ProfileSettings = () => {
     nickname: session?.user?.name || "",
     avatar: session?.user?.image || null,
   });
+
+  const style = useSelector((state) => state.styles);
 
   const [isNicknameChanged, setIsNicknameChanged] = useState(false);
   const [isAvatarChanged, setIsAvatarChanged] = useState(false);
@@ -62,11 +65,11 @@ const ProfileSettings = () => {
           </label>
           <input
             type="text"
-            id="name"
+            id="nickname"
             name="nickname"
             value={profileData.nickname}
             onChange={handleChange}
-            className="w-full p-2 rounded-md"
+            className={`w-full p-2 rounded-md ${style.input}`}
             autoComplete="off"
           />
           <ApplyButton

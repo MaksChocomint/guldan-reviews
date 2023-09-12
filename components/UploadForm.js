@@ -2,14 +2,22 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import { uploadForm } from "@/actions/uploadActions";
 import ButtonSubmit from "./ButtonSubmit";
+import { useSelector } from "react-redux";
 
 const UploadForm = () => {
   const { data: session } = useSession();
+  const style = useSelector((state) => state.styles);
   const router = useRouter();
+  const inputStyle = useMemo(
+    () =>
+      style.foreground.slice(0, -3) +
+      (Number(style.foreground.slice(-3)) + 100),
+    [style]
+  );
 
   const [formData, setFormData] = useState({
     userName: session?.user?.name,
@@ -130,7 +138,7 @@ const UploadForm = () => {
       action={handleSubmit}
       className="mt-10 grid grid-cols-2 gap-4 text-lg"
     >
-      <div className="flex gap-12 items-center">
+      <div className={`flex gap-12 items-center ${inputStyle}`}>
         <label htmlFor="name" className="text-xl font-medium">
           Название:
         </label>
@@ -141,11 +149,11 @@ const UploadForm = () => {
           value={formData.name}
           required={true}
           onChange={handleInputChange}
-          className="w-full p-2 rounded-md"
+          className={`w-full p-2 rounded-md ${style.input}`}
           autoComplete="off"
         />
       </div>
-      <div>
+      <div className={inputStyle}>
         <label className="text-xl font-medium">На что рецензия?</label>
         <div className="flex justify-between w-24 mt-4">
           <label htmlFor="anime">Аниме</label>
@@ -181,7 +189,7 @@ const UploadForm = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className={`flex flex-col gap-4 ${inputStyle}`}>
         <label htmlFor="image">
           <span className="text-xl font-medium">Загрузите картинку</span> к
           своей рецензии, например аниме-арт:
@@ -195,7 +203,7 @@ const UploadForm = () => {
           onChange={handleImageChange}
         />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className={`flex flex-col gap-4 ${inputStyle}`}>
         <label htmlFor="audio">
           <span className="text-xl font-medium">Загрузите озвучку</span> или
           музыкальное сопровождение :3
@@ -208,7 +216,7 @@ const UploadForm = () => {
           onChange={handleAudioChange}
         />
       </div>
-      <div className="col-span-2">
+      <div className={`col-span-2 ${inputStyle}`}>
         <div className="flex flex-col gap-8 justify-center items-center h-full">
           <div className="w-full">
             <label htmlFor="review" className="text-xl font-medium">
@@ -220,12 +228,12 @@ const UploadForm = () => {
               value={formData.review}
               required={true}
               onChange={handleInputChange}
-              className="w-full resize-none h-96 overflow-y-scroll mt-4 py-2 px-4 rounded-md"
+              className={`w-full resize-none h-96 overflow-y-auto mt-4 py-2 px-4 rounded-md ${style.input}`}
             />
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className={`flex flex-col gap-2 ${inputStyle}`}>
         <label className="text-xl font-medium">Оценки по критериям:</label>
         <div className="flex justify-between w-56 mt-4">
           <label htmlFor="storyRating">Сюжет:</label>
@@ -237,7 +245,7 @@ const UploadForm = () => {
             max="10"
             value={formData.storyRating}
             onChange={handleInputChange}
-            className="p-1 text-center rounded-md"
+            className={`p-1 text-center rounded-md ${style.input}`}
           />
         </div>
         <div className="flex justify-between w-56">
@@ -250,7 +258,7 @@ const UploadForm = () => {
             max="10"
             value={formData.charactersRating}
             onChange={handleInputChange}
-            className="p-1 text-center rounded-md"
+            className={`p-1 text-center rounded-md ${style.input}`}
           />
         </div>
         <div className="flex justify-between w-56">
@@ -263,7 +271,7 @@ const UploadForm = () => {
             max="10"
             value={formData.graphicsRating}
             onChange={handleInputChange}
-            className="p-1 text-center rounded-md"
+            className={`p-1 text-center rounded-md ${style.input}`}
           />
         </div>
         <div className="flex justify-between w-56">
@@ -276,11 +284,13 @@ const UploadForm = () => {
             max="10"
             value={formData.musicRating}
             onChange={handleInputChange}
-            className="p-1 text-center rounded-md"
+            className={`p-1 text-center rounded-md ${style.input}`}
           />
         </div>
       </div>
-      <div className="text-2xl font-semibold flex gap-4 items-center">
+      <div
+        className={`text-2xl font-semibold flex gap-4 items-center ${inputStyle}`}
+      >
         Итоговая оценка:
         <div
           className={`${
@@ -311,7 +321,7 @@ const UploadForm = () => {
         </div>
       </div>
 
-      <div className="col-span-2">
+      <div className={`col-span-2 ${inputStyle}`}>
         <div className="flex flex-col gap-8 justify-center items-center h-full">
           <ButtonSubmit className="bg-green-400 center w-1/3 h-32 flex items-center justify-center text-3xl transition-colors cursor-pointer hover:bg-green-300">
             <AiOutlineAppstoreAdd size={40} />

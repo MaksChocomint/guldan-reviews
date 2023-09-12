@@ -1,8 +1,10 @@
 import { uploadComment } from "@/actions/uploadActions";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CommentInput = ({ reviewId, fetchData }) => {
+  const style = useSelector((state) => state.styles);
   const [comment, setComment] = useState("");
   const { data: session } = useSession();
 
@@ -35,11 +37,14 @@ const CommentInput = ({ reviewId, fetchData }) => {
         type="text"
         value={comment}
         onChange={handleChange}
-        className="w-full resize-none px-2 py-1 h-32 rounded-t-md"
+        className={`w-full resize-none px-2 py-1 h-32 rounded-t-md ${style.input}`}
         placeholder="Текст комментария"
       />
       <button
-        className="rounded-b-md px-2 py-1 bg-zinc-300 w-auto transition-colors hover:bg-zinc-400"
+        className={`rounded-b-md px-2 py-1 ${
+          style.foreground.slice(0, -3) +
+          (Number(style.foreground.slice(-3)) + 100)
+        } w-auto transition-colors ${style.btnHover}`}
         onClick={handleClick}
       >
         Написать
