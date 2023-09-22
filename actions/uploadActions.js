@@ -123,6 +123,15 @@ export async function updateAllReviews(profileData) {
         },
       }
     );
+    await Comment.updateMany(
+      { userEmail: profileData.email },
+      {
+        $set: {
+          userName: profileData.name,
+          userAvatar: profileData.image,
+        },
+      }
+    );
   } catch (error) {
     console.log(error);
     return;
