@@ -1,14 +1,75 @@
 "use client";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import Rating from "./Rating";
 import Rate from "./Rate";
+import { FaTrash } from "react-icons/fa"; // Импортируем иконку корзины
 
 const ReviewCard = ({ review, id, setReviewList }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = useSession();
+
+  const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+
+  const contextMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        contextMenuRef.current &&
+        !contextMenuRef.current.contains(event.target)
+      ) {
+        setContextMenuVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+    setContextMenuVisible(true);
+    setContextMenuPosition({
+      top: event.clientY + window.scrollY,
+      left: event.clientX + window.scrollX,
+    });
+  };
+
+  const handleDeleteReview = async (event) => {
+    event.stopPropagation(); // Prevent the click event from propagating to the parent
+
+    try {
+      const response = await fetch(
+        `/api/deleteReview/${encodeURIComponent(review._id)}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        setReviewList((prevList) =>
+          prevList.filter((item) => item._id !== review._id)
+        );
+        setContextMenuVisible(false);
+      } else {
+        console.error("Ошибка при удалении рецензии");
+      }
+    } catch (error) {
+      console.error("Ошибка при удалении рецензии", error);
+    }
+  };
+
   return (
     <div
       className="flex flex-col items-center leading-tight w-full h-64 bg-zinc-600 border-4 border-zinc-700 overflow-hidden rounded-b-xl cursor-pointer transition-colors hover:border-zinc-400"
@@ -16,9 +77,10 @@ const ReviewCard = ({ review, id, setReviewList }) => {
         session
           ? router.push(`/reviews/${review._id}`)
           : alert(
-              "Пожалуйста, войдите в свой аккаунт, чтобы просматривать рецензии других пользователей и добавлять свои!"
+              "Пожалуйста, войдите, чтобы просматривать рецензии пользователей и добавлять свои!"
             );
       }}
+      onContextMenu={handleContextMenu}
     >
       <div className="relative h-5/6 w-full">
         <Rate review={review} id={id} setReviewList={setReviewList} />
@@ -57,41 +119,32 @@ const ReviewCard = ({ review, id, setReviewList }) => {
             alt="avatar"
             className="border-2 rounded-sm border-zinc-500"
           />
-          <div>
-            {review.userName}{" "}
-            <span className="font-semibold">
-              -{" "}
-              <span
-                className={`${
-                  review.overallRating == 10
-                    ? "text-pink-400"
-                    : review.overallRating == 9
-                    ? "text-yellow-500"
-                    : review.overallRating == 8
-                    ? "text-purple-500"
-                    : review.overallRating == 7
-                    ? "text-blue-500"
-                    : review.overallRating == 6
-                    ? "text-green-500"
-                    : review.overallRating == 5
-                    ? "text-orange-400"
-                    : review.overallRating == 4
-                    ? "text-orange-600"
-                    : review.overallRating == 3
-                    ? "text-red-500"
-                    : review.overallRating == 2
-                    ? "text-orange-800"
-                    : review.overallRating == 1
-                    ? "text-gray-500"
-                    : "text-gray-800"
-                }`}
-              >
-                {review.overallRating}
-              </span>
-            </span>
+          <div className="flex gap-1">
+            <span>{review.userName}</span>
+            <Rating value={review.overallRating} />
           </div>
         </div>
       </div>
+
+      {/* Context menu */}
+      {contextMenuVisible && pathname === "/profile" && (
+        <div
+          ref={contextMenuRef}
+          className="absolute p-2 bg-red-500 border border-gray-300 rounded shadow"
+          style={{
+            top: contextMenuPosition.top,
+            left: contextMenuPosition.left,
+            zIndex: 1000,
+          }}
+        >
+          <button
+            onClick={(event) => handleDeleteReview(event)}
+            className="bg-red-500 flex justify-center items-center"
+          >
+            <FaTrash color="white" size={20} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

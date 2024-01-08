@@ -1,26 +1,34 @@
+// AudioPlayer.js
+import { useAudioContext } from "@/context/audio";
 import { setViews } from "@/actions/setActions";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { MdPlayCircle, MdStopCircle } from "react-icons/md";
 
 const AudioPlayer = ({ audioUrl, reviewId }) => {
+  const { playAudio, pauseAudio, activeAudioPlayer } = useAudioContext();
   const [audio] = useState(new Audio(audioUrl));
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const pathname = usePathname();
-
   const [isViewed, setIsViewed] = useState(false);
 
   const toggleAudio = async (e) => {
     e.stopPropagation();
 
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
+    if (activeAudioPlayer && activeAudioPlayer !== audio) {
+      pauseAudio();
     }
+
+    if (!isPlaying) {
+      playAudio(audio);
+    } else {
+      pauseAudio();
+    }
+
     setIsPlaying(!isPlaying);
+
     if (!isViewed) {
       await setViews(reviewId);
       setIsViewed(true);
@@ -67,7 +75,11 @@ const AudioPlayer = ({ audioUrl, reviewId }) => {
     >
       <div className="flex flex-col items-center text-blue-400 w-[70px] bg-zinc-200 rounded-full ">
         <button onClick={toggleAudio}>
-          {isPlaying ? <MdStopCircle size={70} /> : <MdPlayCircle size={70} />}
+          {activeAudioPlayer === audio && isPlaying ? (
+            <MdStopCircle size={70} />
+          ) : (
+            <MdPlayCircle size={70} />
+          )}
         </button>
       </div>
       <input

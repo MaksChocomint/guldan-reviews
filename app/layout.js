@@ -4,6 +4,7 @@ import { Jost } from "next/font/google";
 import mongooseConnect from "@/lib/mongoose";
 import { Review } from "@/models/Review";
 import ReduxProvider from "@/context/reduxProvider";
+import { AudioProvider } from "@/context/audio";
 
 mongooseConnect();
 
@@ -22,7 +23,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className={jost.className}>
         <ReduxProvider>
-          <Provider>{children}</Provider>
+          <Provider>
+            <AudioProvider>{children}</AudioProvider>
+          </Provider>
         </ReduxProvider>
       </body>
     </html>
