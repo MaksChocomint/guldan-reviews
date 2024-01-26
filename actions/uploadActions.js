@@ -18,16 +18,21 @@ cloudinary.config({
 async function saveFilesToLocal(formData) {
   const files = formData.getAll("files");
 
-  const multipleBuffersPromise = files.map((file, index) =>
+  const multipleBuffersPromise = files.map((file) =>
     file.arrayBuffer().then((data) => {
       const buffer = Buffer.from(data);
       const name = uuidv4();
+      const type = file.type.split("/")[0];
       const ext = file.type.split("/")[1];
 
       const tempdir = os.tmpdir();
       const uploadDir = path.join(tempdir, `${name}.${ext}`);
       fs.writeFile(uploadDir, buffer);
-      return { filepath: uploadDir, filename: file.name, id: index };
+      return {
+        filepath: uploadDir,
+        filename: file.name,
+        id: type === "image" ? 0 : 1,
+      };
     })
   );
 
@@ -53,15 +58,49 @@ async function uploadFilesToCloudinary(newFiles) {
   return await Promise.all(multipleFilesPromise);
 }
 
-export async function uploadForm(formData) {
+export async function uploadForm(formData, id) {
   try {
-    const newFiles = await saveFilesToLocal(formData);
+    let newFiles;
+    let cloudFiles;
+    if (formData.getAll("files")) {
+      newFiles = await saveFilesToLocal(formData);
+      cloudFiles = await uploadFilesToCloudinary(newFiles);
 
-    const cloudFiles = await uploadFilesToCloudinary(newFiles);
-
-    newFiles.map((file) => fs.unlink(file.filepath));
+      newFiles.map((file) => fs.unlink(file.filepath));
+    }
+    const imageCloudFile = cloudFiles.find(
+      (file) => file.resource_type === "image"
+    );
+    const audioCloudFile = cloudFiles.find(
+      (file) => file.resource_type === "video"
+    );
 
     const data = formData.getAll("data");
+
+    let imageData;
+    let audioData;
+    let likes;
+    let dislikes;
+
+    if (id) {
+      if (data.length === 13) {
+        likes = data[11];
+        dislikes = data[12];
+      } else if (data.length === 14 && imageCloudFile?.secure_url) {
+        audioData = data[11];
+        likes = data[12];
+        dislikes = data[13];
+      } else if (data.length === 14 && audioCloudFile?.secure_url) {
+        imageData = data[11];
+        likes = data[12];
+        dislikes = data[13];
+      } else {
+        imageData = data[11];
+        audioData = data[12];
+        likes = data[13];
+        dislikes = data[14];
+      }
+    }
 
     const newReview = new Review({
       userName: data[0],
@@ -75,12 +114,42 @@ export async function uploadForm(formData) {
       graphicsRating: data[8],
       musicRating: data[9],
       overallRating: data[10],
-      image: cloudFiles[0].secure_url,
-      audio: cloudFiles[1] ? cloudFiles[1].secure_url : null,
-      rate: { likes: [], dislikes: [] },
+      image: imageCloudFile?.secure_url
+        ? imageCloudFile?.secure_url
+        : imageData,
+      audio: audioCloudFile?.secure_url
+        ? audioCloudFile?.secure_url
+        : audioData,
+      rate: { likes: likes, dislikes: dislikes } || {
+        likes: [],
+        dislikes: [],
+      },
     });
 
-    await Review.create(newReview);
+    !id
+      ? await Review.create(newReview)
+      : await Review.findByIdAndUpdate(id, {
+          $set: {
+            name: data[3],
+            contentType: data[4],
+            review: data[5],
+            storyRating: data[6],
+            charactersRating: data[7],
+            graphicsRating: data[8],
+            musicRating: data[9],
+            overallRating: data[10],
+            image: imageCloudFile?.secure_url
+              ? imageCloudFile?.secure_url
+              : imageData,
+            audio: audioCloudFile?.secure_url
+              ? audioCloudFile?.secure_url
+              : audioData,
+            rate:
+              likes && dislikes
+                ? { likes: likes, dislikes: dislikes }
+                : { likes: [], dislikes: [] },
+          },
+        });
 
     return { msg: "Review Upload Success!" };
   } catch (error) {

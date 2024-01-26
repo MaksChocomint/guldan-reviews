@@ -1,3 +1,4 @@
+// ReviewCard.js
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -6,12 +7,15 @@ import Image from "next/image";
 import AudioPlayer from "./AudioPlayer";
 import Rating from "./Rating";
 import Rate from "./Rate";
-import { FaTrash } from "react-icons/fa"; // Импортируем иконку корзины
+import { FaTrash, FaEdit } from "react-icons/fa"; // Import icons for delete and edit
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const ReviewCard = ({ review, id, setReviewList }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { data: session } = useSession();
+
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -47,8 +51,23 @@ const ReviewCard = ({ review, id, setReviewList }) => {
     });
   };
 
-  const handleDeleteReview = async (event) => {
-    event.stopPropagation(); // Prevent the click event from propagating to the parent
+  const handleDeleteReview = (event) => {
+    event.stopPropagation();
+    setDeleteModalVisible(true);
+  };
+
+  const handleEditReview = (event) => {
+    event.stopPropagation();
+
+    session
+      ? router.push(`/reviews/${review._id}/edit`)
+      : alert(
+          "Пожалуйста, войдите, чтобы просматривать рецензии пользователей и добавлять свои!"
+        );
+  };
+
+  const handleConfirmDelete = async (event) => {
+    event.stopPropagation();
 
     try {
       const response = await fetch(
@@ -61,13 +80,18 @@ const ReviewCard = ({ review, id, setReviewList }) => {
         setReviewList((prevList) =>
           prevList.filter((item) => item._id !== review._id)
         );
-        setContextMenuVisible(false);
+        setDeleteModalVisible(false);
       } else {
         console.error("Ошибка при удалении рецензии");
       }
     } catch (error) {
       console.error("Ошибка при удалении рецензии", error);
     }
+  };
+
+  const handleCancelDelete = (event) => {
+    event.stopPropagation();
+    setDeleteModalVisible(false);
   };
 
   return (
@@ -126,11 +150,10 @@ const ReviewCard = ({ review, id, setReviewList }) => {
         </div>
       </div>
 
-      {/* Context menu */}
       {contextMenuVisible && pathname === "/profile" && (
         <div
           ref={contextMenuRef}
-          className="absolute p-2 bg-red-500 border border-gray-300 rounded shadow"
+          className="absolute border border-gray-500 rounded-md shadow"
           style={{
             top: contextMenuPosition.top,
             left: contextMenuPosition.left,
@@ -138,12 +161,26 @@ const ReviewCard = ({ review, id, setReviewList }) => {
           }}
         >
           <button
-            onClick={(event) => handleDeleteReview(event)}
-            className="bg-red-500 flex justify-center items-center"
+            onClick={handleEditReview}
+            className="bg-blue-500 p-2 flex justify-center rounded-t items-center hover:bg-blue-400 transition-colors"
+          >
+            <FaEdit color="white" size={20} />
+          </button>
+          <button
+            onClick={handleDeleteReview}
+            className="bg-red-500 p-2 flex justify-center rounded-b items-center hover:bg-red-400 transition-colors"
           >
             <FaTrash color="white" size={20} />
           </button>
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalVisible && (
+        <DeleteConfirmationModal
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
       )}
     </div>
   );

@@ -1,23 +1,22 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-import { AiOutlineAppstoreAdd } from "react-icons/ai";
+import { GrUpdate } from "react-icons/gr";
 import { uploadForm } from "@/actions/uploadActions";
 import ButtonSubmit from "./ButtonSubmit";
 import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
+import { getReviewById } from "@/actions/getActions";
+import { FaSave } from "react-icons/fa";
 
-const UploadForm = () => {
+const EditForm = () => {
   const { data: session } = useSession();
   const style = useSelector((state) => state.styles);
   const router = useRouter();
-  const inputStyle = useMemo(
-    () =>
-      style.foreground.slice(0, -3) +
-      (Number(style.foreground.slice(-3)) + 100),
-    [style]
-  );
+  const pathname = usePathname();
+  const id = pathname.split("/reviews/")[1].split("/")[0];
+  const [review, setReview] = useState();
 
   const [formData, setFormData] = useState({
     userName: session?.user?.name,
@@ -33,16 +32,47 @@ const UploadForm = () => {
     overallRating: 5,
     image: null,
     audio: null,
+    likes: [],
+    dislikes: [],
   });
 
+  const inputStyle = useMemo(
+    () =>
+      style.foreground.slice(0, -3) +
+      (Number(style.foreground.slice(-3)) + 100),
+    [style]
+  );
+
+  const fetchData = async () => {
+    try {
+      const reviewData = await getReviewById(id);
+      setReview(reviewData);
+
+      setFormData({
+        userName: reviewData.userName || session?.user?.name,
+        userEmail: reviewData.userEmail || session?.user?.email,
+        userAvatar: reviewData.userAvatar || String(session?.user?.image),
+        name: reviewData.name || "",
+        contentType: reviewData.contentType || "anime",
+        review: reviewData.review || "",
+        storyRating: reviewData.storyRating || 5,
+        charactersRating: reviewData.charactersRating || 5,
+        graphicsRating: reviewData.graphicsRating || 5,
+        musicRating: reviewData.musicRating || 5,
+        overallRating: reviewData.overallRating || 5,
+        image: reviewData.image || null,
+        audio: reviewData.audio || null,
+        likes: reviewData.likes || [],
+        dislikes: reviewData.dislikes || [],
+      });
+    } catch (error) {
+      console.error("Ошибка при получении рецензии:", error);
+    }
+  };
+
   useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-      userName: session?.user?.name,
-      userEmail: session?.user?.email,
-      userAvatar: String(session?.user?.image),
-    }));
-  }, [session]);
+    fetchData();
+  }, []);
 
   const handleAudioChange = (e) => {
     const file = e.target.files?.[0] || null;
@@ -119,23 +149,30 @@ const UploadForm = () => {
     formData.musicRating,
   ]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const newFormData = new FormData();
     for (const key in formData) {
-      if (typeof formData[key] === "object") {
+      if (
+        typeof formData[key] === "object" &&
+        key !== "likes" &&
+        key !== "dislikes"
+      ) {
+        console.log(key);
         if (formData[key] !== null) newFormData.append("files", formData[key]);
       } else {
         newFormData.append("data", formData[key]);
       }
     }
 
-    const res = await uploadForm(newFormData, null);
+    const res = await uploadForm(newFormData, id);
     router.push("/profile");
   };
 
   return (
     <form
-      action={handleSubmit}
+      onSubmit={handleSubmit}
       className="mt-10 grid grid-cols-2 gap-4 text-lg"
     >
       <div className={`flex gap-12 items-center ${inputStyle}`}>
@@ -153,6 +190,7 @@ const UploadForm = () => {
           autoComplete="off"
         />
       </div>
+
       <div className={inputStyle}>
         <label className="text-xl font-medium">На что рецензия?</label>
         <div className="flex justify-between w-24 mt-4">
@@ -189,6 +227,7 @@ const UploadForm = () => {
           />
         </div>
       </div>
+
       <div className={`flex flex-col gap-4 ${inputStyle}`}>
         <label htmlFor="image">
           <span className="text-xl font-medium">Загрузите картинку</span> к
@@ -203,10 +242,11 @@ const UploadForm = () => {
           onChange={handleImageChange}
         />
       </div>
+
       <div className={`flex flex-col gap-4 ${inputStyle}`}>
         <label htmlFor="audio">
-          <span className="text-xl font-medium">Загрузите озвучку</span> или
-          музыкальное сопровождение :3
+          <span className="text-xl font-medium">Загрузите новую озвучку</span>{" "}
+          или музыкальное сопровождение :3
         </label>
         <input
           type="file"
@@ -216,6 +256,7 @@ const UploadForm = () => {
           onChange={handleAudioChange}
         />
       </div>
+
       <div className={`col-span-2 ${inputStyle}`}>
         <div className="flex flex-col gap-8 justify-center items-center h-full">
           <div className="w-full">
@@ -233,6 +274,7 @@ const UploadForm = () => {
           </div>
         </div>
       </div>
+
       <div className={`flex flex-col gap-2 ${inputStyle}`}>
         <label className="text-xl font-medium">Оценки по критериям:</label>
         <div className="flex justify-between w-56 mt-4">
@@ -288,6 +330,7 @@ const UploadForm = () => {
           />
         </div>
       </div>
+
       <div
         className={`text-2xl font-semibold flex gap-4 items-center ${inputStyle}`}
       >
@@ -323,8 +366,8 @@ const UploadForm = () => {
 
       <div className={`col-span-2 ${inputStyle}`}>
         <div className="flex flex-col gap-8 justify-center items-center h-full">
-          <ButtonSubmit className="bg-green-400 center w-1/3 h-32 flex items-center justify-center text-3xl transition-colors cursor-pointer hover:bg-green-300">
-            <AiOutlineAppstoreAdd size={40} />
+          <ButtonSubmit className="bg-blue-400 center w-1/3 h-32 flex items-center justify-center text-3xl transition-colors cursor-pointer hover:bg-blue-300">
+            <FaSave size={40} />
           </ButtonSubmit>
         </div>
       </div>
@@ -332,4 +375,4 @@ const UploadForm = () => {
   );
 };
 
-export default UploadForm;
+export default EditForm;
